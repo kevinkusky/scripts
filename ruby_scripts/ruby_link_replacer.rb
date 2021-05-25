@@ -9,8 +9,11 @@ def subfolder_search(dir_path)
             next_search = dir_path + '/' + dir_item
             subfolder_paths << subfolder_search(next_search)
         end
-    # Pull file types concerned with: jsx, js, erb, rb, html
-    elsif (dir_path.end_with?('.jsx') || dir_path.end_with?('.js') || dir_path.end_with?('.erb') || dir_path.end_with?('.rb') || dir_path.end_with?('.js') || dir_path.end_with?('.html'))
+    # Pull file types concerned with: jsx, js, erb, rb, html, php
+    elsif (dir_path.end_with?('.jsx') || dir_path.end_with?('.js') || 
+        dir_path.end_with?('.erb') || dir_path.end_with?('.rb') || dir_path.end_with?('.js') || 
+        dir_path.end_with?('.php') || dir_path.end_with?('.html'))
+        
         subfolder_paths << dir_path
     end
 
@@ -36,26 +39,19 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
         # Flattened Files array
         search_files.flatten.each do |file|
             # conditional check for string inclusion in each file
-            # i.e: is this link hardcoded in?
-            
             if File.open(file).read.include?(bad_link)
-                puts "Match found!!: #{bad_link}"
-
+                puts "#{bad_link} => #{bad_link.start_with?('https://www')}"
                 # switch statement for each case on how to replace with gsub
-                case bad_link
-                when !(bad_link.start_with?('https://www'))
-                    good_link = 'htpps://www' + bad_link.split("://")[1].to_s
-                    puts 'prepend www to URL'
-                when bad_link.end_with?('.html')
+                if !(bad_link.start_with?('https://www') || bad_link.start_with?('http://www'))
+                    good_link = 'https://www.' + bad_link.split("://")[1].to_s
+                    puts "prepend www to URL as #{good_link}"
+                    # bad_link.gsub(bad_link, good_link)
+                elsif bad_link.end_with?('.html')
                     good_link = bad_link + '/'
                     puts 'append slash char'
                 else
-                    puts "something went terribly wrong with #{bad_link}"
+                    puts "Bad Case with #{bad_link} in #{file}"
                 end
-                # good_link = bad_link + "/"
-                # replace.gsub(bad_link, good_link)
-            # else
-            #     puts "no match"
             end
         end
         i += 1
