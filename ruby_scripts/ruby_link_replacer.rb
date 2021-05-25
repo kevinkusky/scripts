@@ -26,7 +26,7 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
     i = 0
 
     links_file.each do |row|
-        # Possible hardcoded URL in Col A
+        # Possible hardcoded URL in Col  A
         bad_link = row[0]
         
         # Skip Headers and Dupes
