@@ -22,14 +22,14 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
     search_files = subfolder_search(dir_path)
 
     links_file.each do |row|
-        # Skip Headers - Current data formated as such:
+        # Skip Headers
         next if row[0] == 'Address'
 
         # Possible hardcoded URL in Col A
         bad_link = row[0]
         
         # Flattened Files array
-        search_files.flatten().each do |file|
+        search_files.flatten.each do |file|
             # conditional check for string inclusion in each file
             # i.e: is this link hardcoded in?
             # puts file.respond_to?('each')
