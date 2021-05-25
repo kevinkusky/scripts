@@ -34,22 +34,23 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
         end
         
         # Flattened Files array
-        search_files.flatten.uniq.each do |file|
+        search_files.flatten.each do |file|
             # conditional check for string inclusion in each file
             # i.e: is this link hardcoded in?
             
-            if File.open(file).include?(bad_link)
-                puts "Match found!"
+            if File.open(file).read.include?(bad_link)
+                puts "Match found!!: #{bad_link}"
+
                 # switch statement for each case on how to replace with gsub
                 case bad_link
-                when !bad_link.start_with('https://www')
+                when !(bad_link.start_with?('https://www'))
                     good_link = 'htpps://www' + bad_link.split("://")[1].to_s
                     puts 'prepend www to URL'
-                when bad_link.end_with('.html')
+                when bad_link.end_with?('.html')
                     good_link = bad_link + '/'
                     puts 'append slash char'
                 else
-                    puts 'something went terribly wrong'
+                    puts "something went terribly wrong with #{bad_link}"
                 end
                 # good_link = bad_link + "/"
                 # replace.gsub(bad_link, good_link)
