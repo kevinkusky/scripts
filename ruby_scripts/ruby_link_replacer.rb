@@ -22,8 +22,7 @@ end
 
 if ARGV.length == 2 && File.directory?(ARGV[1])
     links_file = CSV.read(ARGV[0])
-    dir_path = ARGV[1] + "/app"
-    search_files = subfolder_search(dir_path)
+    search_files = subfolder_search(ARGV[1])
     i = 0
 
     links_file.each do |row|
@@ -31,7 +30,7 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
         bad_link = row[0]
         
         # Skip Headers and Dupes
-        if bad_link == 'Address' || links_file[i - 1][0] == bad_link
+        if bad_link == 'Address' || links_file[i - 1][0] == bad_link || bad_link.include?('player.vimeo.com')
             i += 1
             next
         end
@@ -40,8 +39,6 @@ if ARGV.length == 2 && File.directory?(ARGV[1])
         search_files.flatten.each do |file|
             # conditional check for string inclusion in each file
             if File.open(file).read.include?(bad_link)
-                puts "#{bad_link} => #{bad_link.start_with?('https://www')}"
-                # switch statement for each case on how to replace with gsub
                 if !(bad_link.start_with?('https://www') || bad_link.start_with?('http://www'))
                     good_link = 'https://www.' + bad_link.split("://")[1].to_s
                     puts "prepend www to URL as #{good_link}"
