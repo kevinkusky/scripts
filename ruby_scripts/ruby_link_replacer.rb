@@ -27,7 +27,7 @@ if ARGV.length == 1
                     good_link = 'https://www.' + bad_url.split("://")[1].to_s + '/'
                     puts "prepend www to URL as #{good_link}"
                     # write to file then gsub then close
-                    bad_url.gsub(bad_url, good_link)
+                    # bad_url.gsub(bad_url, good_link)
                 elsif bad_url.end_with?('.html')
                     good_link = bad_url + '/'
                     puts 'append slash char'
