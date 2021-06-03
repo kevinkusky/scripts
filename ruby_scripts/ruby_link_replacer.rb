@@ -24,7 +24,7 @@ if ARGV.length == 1
                 puts "Current File: #{file}; Current Url: #{bad_url}"
 
                 if !(bad_url.start_with?('https://www') || bad_url.start_with?('http://www'))
-                    good_url = 'https://www.' + bad_url.split("://")[1].to_s + '/'
+                    good_url = 'https://www.' + bad_url.split("://")[1].to_s
                     
                     # write to file then gsub then close
                     corrected_content = file_contents.gsub(bad_url, good_url)
