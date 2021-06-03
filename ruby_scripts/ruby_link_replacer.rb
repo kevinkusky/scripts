@@ -25,17 +25,17 @@ if ARGV.length == 1
 
                 if !(bad_url.start_with?('https://www') || bad_url.start_with?('http://www'))
                     good_url = 'https://www.' + bad_url.split("://")[1].to_s + '/'
-                    puts "prepend www to URL as #{good_url}"
-
+                    
                     # write to file then gsub then close
                     corrected_content = file_contents.gsub(bad_url, good_url)
                     File.open(file, "w"){|f| f.puts corrected_content}
+                    puts "write to #{file} after gsub"
                 elsif bad_url.end_with?('.html')
                     good_url = bad_url + '/'
-                    puts 'append slash char'
-
+                    
                     corrected_content = file_contents.gsub(bad_url, good_url)
                     File.open(file, "w"){|f| f.puts corrected_content}
+                    puts "write to #{file} after gsub"
                 else
                     puts "Bad Case with #{bad_url} in #{file}"
                 end
