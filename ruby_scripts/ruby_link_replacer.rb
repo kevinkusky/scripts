@@ -40,7 +40,6 @@ if ARGV.length == 1
                     puts "Bad Case with #{bad_url} in #{file}"
                 end
             end
-            File.close(file)
         end
     end
 else
