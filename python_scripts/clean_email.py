@@ -1,41 +1,44 @@
+import os
+import time
 import imaplib
 import email
-from email.utils import parsedate_to_datetime
-from datetime import datetime, timedelta
 
 def clean_email():
-    # First connect to email address
+    # Connect to the Gmail IMAP server, sign in and select inbox
     mail = imaplib.IMAP4_SSL("imap.gmail.com")
-    mail.login("", "")
+    mail.login(<your_gmail_address>, <your_gmail_password>)
+    mail.select("inbox")
 
-    # Select
-    mail.select('inbox')
-
-    result, data = mail.search(None, "ALL")
+    # Create list of email IDs from all emails older than 30 days
+    result, data = mail.search(None, '(BEFORE 7-Jan-2023)')
     email_ids = data[0].split()
 
+    # Keep a list of senders whose emails you want to keep
     approved_senders = [
-        '', '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '', '',
+        'nadiadigregorio11@gmail.com', 'joekarlsson@substack.com', 'rw@peterc.org', 'kevinkusky@gmail.com',
+        'james@nexhealth.com', 'locomotionnewyork@gmail.com', 'appacademy.io', 'coursera.org', 'heroku.com',
     ]
-    now = datetime.now()
 
-    for id in email_ids:
-        r, d = mail.fetch(id, "(RFC822)")
-        raw_email = d[0][1].decode("utf-8")
-        message = email.message_from_string(raw_email)
-        e_date = parsedate_to_datetime(message["Date"])
-        if (now - e_date) and (message["From"] not in approved_senders):
-            pass
+    # Iterate over all email IDs
+    for email_id in email_ids:
+        # Fetch the email message
+        result, data = mail.fetch(email_id, "(RFC822)")
+        email_message = email.message_from_bytes(data[0][1])
 
-    mail.expunge()
+        # Check if the email is from an approved sender
+        keep_email = False
+        for sender in approved_senders:
+            if sender in email_message["From"]:
+                keep_email = True
+                break
+
+        # If the email is not from an approved sender, delete it
+        if not keep_email:
+            mail.store(email_id, "+FLAGS", "\\Deleted")
+
+    # Close and logout of the Gmail account
     mail.close()
     mail.logout()
 
 if __name__ == "__main__":
     clean_email()
-    
